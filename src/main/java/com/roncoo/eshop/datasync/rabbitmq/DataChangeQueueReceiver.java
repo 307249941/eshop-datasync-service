@@ -104,7 +104,7 @@ public class DataChangeQueueReceiver {
 //    		}
     		
     		try{
-    			JSONObject dataJSONObject = JSONArray.parseObject(eshopProductService.findBrandById(id));
+    			JSONObject dataJSONObject = JSONObject.parseObject(eshopProductService.findBrandById(id));
     		Jedis jedis = jedisPool.getResource();
     		jedis.set("brand_" + id, dataJSONObject.toJSONString());
     		dimDataChangeMessageSet.add("{\"dim_type\": \"brand\", \"id\": " + id+ "}");
