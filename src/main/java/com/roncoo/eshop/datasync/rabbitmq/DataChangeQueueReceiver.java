@@ -103,10 +103,14 @@ public class DataChangeQueueReceiver {
 //        		brandDataChangeMessageList.clear();
 //    		}
     		
-    		JSONArray brandJSONArray = JSONArray.parseArray(eshopProductService.findBrandById(id));
+    		try{
+    			JSONObject dataJSONObject = JSONArray.parseObject(eshopProductService.findBrandById(id));
     		Jedis jedis = jedisPool.getResource();
-    		jedis.set("brand_" + id, brandJSONArray.toJSONString());
+    		jedis.set("brand_" + id, dataJSONObject.toJSONString());
     		dimDataChangeMessageSet.add("{\"dim_type\": \"brand\", \"id\": " + id+ "}");
+    		}catch(Exception e){
+    			e.printStackTrace();
+    		}
     	} else if ("delete".equals(eventType)) {
     		Jedis jedis = jedisPool.getResource();
     		jedis.del("brand_" + id);
