@@ -21,9 +21,9 @@ public class EshopDataSyncServiceApplication {
 	@Bean
 	public JedisPool jedisPool() {
 		JedisPoolConfig config = new JedisPoolConfig();
-		config.setMaxTotal(100);
+		config.setMaxTotal(10);
 		config.setMaxIdle(5);
-		config.setMaxWaitMillis(1000 * 10); 
+		config.setMaxWaitMillis(1000 * 100); 
 		config.setTestOnBorrow(true);
 		return new JedisPool(config, "192.168.1.103", 1111);
 	}
