@@ -75,33 +75,38 @@ public class DataChangeQueueReceiver {
     	String eventType = messageJSONObject.getString("event_type"); 
     	
     	if("add".equals(eventType) || "update".equals(eventType)) { 
-    		brandDataChangeMessageList.add(messageJSONObject);
+//    		brandDataChangeMessageList.add(messageJSONObject);
+//    		
+//    		if(brandDataChangeMessageList.size() >= 2) {
+//    			String ids = "";
+//    			
+//    			for(int i = 0; i < brandDataChangeMessageList.size(); i++) {
+//    				ids += brandDataChangeMessageList.get(i).getLong("id");   
+//    				if(i < brandDataChangeMessageList.size() - 1) {
+//    					ids += ",";
+//    				}
+//    			}
+//    			
+//    			JSONArray brandJSONArray = JSONArray.parseArray(eshopProductService.findBrandByIds(ids));
+//    			
+//    			for(int i = 0; i < brandJSONArray.size(); i++) {
+//    				JSONObject dataJSONObject = brandJSONArray.getJSONObject(i);
+//    				
+//    				System.out.println(dataJSONObject.toJSONString()); 
+//    				
+//    				Jedis jedis = jedisPool.getResource();
+//            		jedis.set("brand_" + dataJSONObject.getLong("id"), dataJSONObject.toJSONString());
+//            		
+//            		dimDataChangeMessageSet.add("{\"dim_type\": \"brand\", \"id\": " + dataJSONObject.getLong("id") + "}");
+//    			}
+//        		
+//        		brandDataChangeMessageList.clear();
+//    		}
     		
-    		if(brandDataChangeMessageList.size() >= 2) {
-    			String ids = "";
-    			
-    			for(int i = 0; i < brandDataChangeMessageList.size(); i++) {
-    				ids += brandDataChangeMessageList.get(i).getLong("id");   
-    				if(i < brandDataChangeMessageList.size() - 1) {
-    					ids += ",";
-    				}
-    			}
-    			
-    			JSONArray brandJSONArray = JSONArray.parseArray(eshopProductService.findBrandByIds(ids));
-    			
-    			for(int i = 0; i < brandJSONArray.size(); i++) {
-    				JSONObject dataJSONObject = brandJSONArray.getJSONObject(i);
-    				
-    				System.out.println(dataJSONObject.toJSONString()); 
-    				
-    				Jedis jedis = jedisPool.getResource();
-            		jedis.set("brand_" + dataJSONObject.getLong("id"), dataJSONObject.toJSONString());
-            		
-            		dimDataChangeMessageSet.add("{\"dim_type\": \"brand\", \"id\": " + dataJSONObject.getLong("id") + "}");
-    			}
-        		
-        		brandDataChangeMessageList.clear();
-    		}
+    		JSONArray brandJSONArray = JSONArray.parseArray(eshopProductService.findBrandById(id));
+    		Jedis jedis = jedisPool.getResource();
+    		jedis.set("brand_" + id, brandJSONArray.toJSONString());
+    		dimDataChangeMessageSet.add("{\"dim_type\": \"brand\", \"id\": " + id+ "}");
     	} else if ("delete".equals(eventType)) {
     		Jedis jedis = jedisPool.getResource();
     		jedis.del("brand_" + id);
